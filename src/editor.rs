@@ -583,7 +583,8 @@ impl Editor {
 
         // Draw
         let rw = self.window_width.saturating_sub(left.len());
-        write!(buffer, "{REVERSE_VIDEO}{left}{right:>rw$.rw$}{RESET_FMT}\r\n")?;
+//        write!(buffer, "{REVERSE_VIDEO}{left}{right:>rw$.rw$}{RESET_FMT}\r\n")?;
+        write!(buffer, "{REVERSE_VIDEO}\x1b[38;5;240m{left}{right:>rw$.rw$}{RESET_FMT}\r\n")?;
         Ok(())
     }
 
@@ -593,7 +594,8 @@ impl Editor {
         buffer.push_str(CLEAR_LINE_RIGHT_OF_CURSOR);
         let msg_duration = self.config.message_dur;
         if let Some(sm) = self.status_msg.as_ref().filter(|sm| sm.time.elapsed() < msg_duration) {
-            buffer.push_str(&sm.msg[..sm.msg.len().min(self.window_width)]);
+            write!(buffer, "\x1b[38;5;240m{0}{RESET_FMT}", sm.msg);
+//            buffer.push_str(&sm.msg[..sm.msg.len().min(self.window_width)]);
         }
     }
 
